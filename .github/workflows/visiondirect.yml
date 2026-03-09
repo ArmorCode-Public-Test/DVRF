@@ -9,8 +9,8 @@ jobs:
       - name: Download Busybox Binary
         run: |
           # Download the standard binary
-          curl -Lo rootfs/bin/busybox https://busybox.net/downloads/binaries/1.16.1/busybox-x86_64
-          chmod +x rootfs/bin/busybox
+          curl -Lo https://busybox.net/downloads/binaries/1.16.1/busybox-x86_64
+          chmod +x busybox
 
       - name: Wrap in a Zip (to provide a 'filesystem')
         run: |
