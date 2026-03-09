@@ -9,13 +9,13 @@ jobs:
       - name: Download Busybox Binary
         run: |
           # Download the standard binary
-          curl -Lo busybox https://busybox.net/downloads/binaries/1.35.0-x86_64/busybox
-          chmod +x busybox
+          curl -Lo rootfs/bin/busybox https://busybox.net/downloads/binaries/1.16.1/busybox-x86_64
+          chmod +x rootfs/bin/busybox
 
       - name: Wrap in a Zip (to provide a 'filesystem')
         run: |
           # Vision Vdoo needs a container/filesystem. Zipping it solves this.
-          zip -r my_firmware_package.zip busybox
+          zip -r briangriffin.zip busybox
 
       - name: Upload Zip for Scan
         uses: actions/upload-artifact@v4
