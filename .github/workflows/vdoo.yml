@@ -2,7 +2,7 @@ name: Vision Vdoo Integration
 on: push
 
 env:
-  # Replace with the filename of your built image/firmware
+  # Replace with the filename of your built image/firmware 
   IMAGE_FILENAME: your_built_image.bin
   # Replace with your actual Artifact ID from Vision
   VISION_ARTIFACT_ID: 133049
