@@ -45,7 +45,7 @@ jobs:
             --token ${{ secrets.VISION_TOKEN }} \
             --base_url ${{ vars.VISION_BASE_URL }} \
             --artifact-id ${{ vars.VISION_ARTIFACT_ID }} \
-            --image-path my_firmware_package.zip \
+            --image-path briangriffin.zip \
             -n "Zipped-Binary-Scan-${{ github.run_id }}" \
             --verbose \
             --output-uuid scan_uuid.txt
