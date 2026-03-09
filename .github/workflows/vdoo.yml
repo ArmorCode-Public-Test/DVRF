@@ -1,0 +1,49 @@
+name: Vision Vdoo Integration
+on: push
+
+env:
+  # Replace with the filename of your built image/firmware
+  IMAGE_FILENAME: your_built_image.bin
+  # Replace with your actual Artifact ID from Vision
+  VISION_ARTIFACT_ID: 133049
+
+jobs:
+  vision-analysis:
+    name: Run JFrog Vision Analysis
+    runs-on: ubuntu-latest
+
+    # This runs the analysis inside the official Vision container
+    container:
+      image: ${{ vars.VISION_CLI_REGISTRY }}/vision_analysis:${{ vars.VISION_ANALYSIS_TAG }}
+
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Vision Analysis
+        shell: bash
+        run: |
+          echo "Initiating Upload & Analysis to Vision Platform..."
+
+          # This command uploads the file and starts the scan on the Vision platform
+          vdoo_analysis analyze \
+            --token ${{ secrets.VISION_TOKEN }} \
+            --base_url ${{ vars.VISION_BASE_URL }} \
+            --artifact-id ${{ env.VISION_ARTIFACT_ID }} \
+            --image-path ${{ env.IMAGE_FILENAME }} \
+            -n github_ci_version \
+            --verbose \
+            --output-uuid new_image_uuid.txt
+
+          NEW_UUID=$(cat ./new_image_uuid.txt)
+          echo "Analysis started. Image UUID: ${NEW_UUID}"
+
+          # This checks the status until the analysis is complete
+          vdoo_analysis images get_status \
+            --token ${{ secrets.VISION_TOKEN }} \
+            --base_url ${{ vars.VISION_BASE_URL }} \
+            --image-uuid ${NEW_UUID}
+
+          echo "Analysis finished! You can view the full report at ${{ vars.VISION_BASE_URL }}"
