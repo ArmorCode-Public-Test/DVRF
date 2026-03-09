@@ -21,7 +21,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: package_to_scan
-          path: my_firmware_package.zip
+          path: briangriffin.zip
 
   # Job 2: Run the scan inside the Vdoo container
   vision-scan:
