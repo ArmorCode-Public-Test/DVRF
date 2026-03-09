@@ -3,7 +3,7 @@ on: push
 
 env:
   # Replace with the filename of your built image/firmware 
-  IMAGE_FILENAME: Firmware/DVRF_v03.bin
+  IMAGE_FILENAME: Pwnable Source/Intro/stack_bof_01.c
   # Replace with your actual Artifact ID from Vision
   VISION_ARTIFACT_ID: 133049
 
