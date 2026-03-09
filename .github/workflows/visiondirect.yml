@@ -2,27 +2,39 @@ name: Vision Vdoo Direct Scan
 on: [push]
 
 jobs:
-  scan:
+  # Job 1: Download the binary on a standard runner
+  download-binary:
     runs-on: ubuntu-latest
+    steps:
+      - name: Download Busybox Binary
+        run: |
+          # Use the standard runner's curl to get the binary
+          curl -Lo my_test_binary.bin https://busybox.net/downloads/binaries/1.35.0-x86_64/busybox
 
-    # Using the official Vdoo analysis tool
+      - name: Upload Binary for Scan
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary_to_scan
+          path: my_test_binary.bin
+
+  # Job 2: Run the scan inside the Vdoo container
+  vision-scan:
+    needs: download-binary
+    runs-on: ubuntu-latest
     container:
       image: releases-docker.jfrog.io/vision_analysis:5.29.1
 
     steps:
-      - name: Download Binary for Scanning
-        run: |
-          # We download a real, unencrypted binary directly from the web
-          # This ensures the file DEFINITELY exists for the scan
-          curl -Lo my_test_binary.bin https://busybox.net/downloads/binaries/1.35.0-x86_64/busybox
-
-          # Make sure it's actually there
-          ls -l my_test_binary.bin
+      - name: Download Binary from previous job
+        uses: actions/download-artifact@v4
+        with:
+          name: binary_to_scan
 
       - name: Run Vision Analysis
         shell: bash
         run: |
-          # We scan the file we just downloaded
+          # The binary 'my_test_binary.bin' is now in the workspace
+          # We use the 'vdoo_analysis' tool that is built into this container
           vdoo_analysis analyze \
             --token ${{ secrets.VISION_TOKEN }} \
             --base_url ${{ vars.VISION_BASE_URL }} \
